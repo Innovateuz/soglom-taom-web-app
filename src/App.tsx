@@ -1,26 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useEffect} from 'react';
+import {Routers} from "./routes";
+import {useNavigate} from "react-router-dom";
+import {useProductsStore} from "./store/products";
+import {setInit} from "./utils/lovely";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const navigate = useNavigate()
+    const {setLovely} = useProductsStore()
+
+    useEffect(() => {
+        // @ts-ignore
+        setInit(setLovely)
+        navigate('/main')
+    }, [])
+
+    return (
+        <div className="App">
+            <Routers/>
+        </div>
+    );
 }
 
 export default App;
