@@ -4,19 +4,21 @@ import { MdAdd } from "react-icons/md";
 import { MdRemove } from "react-icons/md";
 import { useProducts } from "../hook/useProducts";
 import { useProductsStore } from "../store/products";
+import { IProduct } from "../types/interfaces";
 
 interface IProps {
   height?: any;
+  product: IProduct;
 }
 
-export const AddRemoveBtn = ({ height }: IProps) => {
+export const AddRemoveBtn = ({ height, product }: IProps) => {
   const { addToCart } = useProductsStore();
 
   return (
     <div className="flex gap-4 items-center ">
       <Button
         className={`bg-[#FA4A0C] rounded-lg text-white h-[${height}px]`}
-        // onClick={() => addToCart(product)}
+        onClick={() => addToCart(product)}
         icon={<MdAdd></MdAdd>}
       ></Button>
       <span>30</span>

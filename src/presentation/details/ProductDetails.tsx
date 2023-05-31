@@ -76,7 +76,7 @@ export const ProductDetails = () => {
           className="bg-[#FA4A0C] text-white"
           name="Savatchaga qo'shish"
         ></Button>
-        <AddRemoveBtn></AddRemoveBtn>
+        <AddRemoveBtn product={product}></AddRemoveBtn>
       </div>
     </Container>
   );
