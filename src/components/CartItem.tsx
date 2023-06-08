@@ -1,5 +1,8 @@
-import React from "react";
-import { AddRemoveBtn } from "./AddRemoveBtn";
+import React, {useEffect, useState} from "react";
+import {AddRemoveBtn} from "./AddRemoveBtn";
+import {Button} from "./Button";
+import {useProductsStore} from "../store/products";
+import {products} from "../mocks/products";
 
 interface IProps {
   id: number;
@@ -9,7 +12,24 @@ interface IProps {
   currency: string;
 }
 
-export const CartItem = ({ id, image, name, price, currency }: IProps) => {
+export const CartItem = ({id, image, name, price, currency}: IProps) => {
+  const {deleteFromCart, cart, updateProduct} = useProductsStore();
+
+  const [quantity, setQuantity] = useState<number>(0)
+
+  const checkIsAddedToCart = () => {
+    for (let i = 0; i < cart.length; i++) {
+      // @ts-ignore
+      if (cart[i].id == id) {
+        setQuantity(cart[i].quantity)
+      }
+    }
+  }
+
+  useEffect(() => {
+    checkIsAddedToCart()
+  }, [cart])
+
   return (
     <div className="flex items-center justify-center gap-10 py-3 px-10 shadow-2xl rounded-3xl bg-white">
       <div>
@@ -24,7 +44,19 @@ export const CartItem = ({ id, image, name, price, currency }: IProps) => {
         <p className="font-bold text-primary pb-2">
           {price} {currency}
         </p>
-        <AddRemoveBtn height={40}></AddRemoveBtn>
+        <div className='flex items-center gap-3'>
+          <Button
+            onClick={() => updateProduct('minus', id || '', deleteFromCart)}
+            className="bg-[#FA4A0C] text-white"
+            name="-"
+          ></Button>
+          <p>{quantity}</p>
+          <Button
+            onClick={() => updateProduct('plus', id || '', deleteFromCart)}
+            className="bg-[#FA4A0C] text-white"
+            name="+"
+          ></Button>
+        </div>
       </div>
     </div>
   );

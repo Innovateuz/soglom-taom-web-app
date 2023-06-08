@@ -1,18 +1,18 @@
 import React from "react";
-import { Button } from "./Button";
-import { MdAdd } from "react-icons/md";
-import { MdRemove } from "react-icons/md";
-import { useProducts } from "../hook/useProducts";
-import { useProductsStore } from "../store/products";
-import { IProduct } from "../types/interfaces";
+import {Button} from "./Button";
+import {MdAdd} from "react-icons/md";
+import {MdRemove} from "react-icons/md";
+import {useProducts} from "../hook/useProducts";
+import {useProductsStore} from "../store/products";
+import {ICartItem, IProduct} from "../types/interfaces";
 
 interface IProps {
   height?: any;
-  product: IProduct;
+  product: ICartItem;
 }
 
-export const AddRemoveBtn = ({ height, product }: IProps) => {
-  const { addToCart } = useProductsStore();
+export const AddRemoveBtn = ({height, product}: IProps) => {
+  const {addToCart} = useProductsStore();
 
   return (
     <div className="flex gap-4 items-center ">
