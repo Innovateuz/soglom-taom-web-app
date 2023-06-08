@@ -7,12 +7,16 @@ interface IProductsStore {
   setLovely: (products: IProduct[]) => void;
   addToCart: (product: ICartItem) => void;
   deleteFromCart: (id: string) => void;
+  clear: () => void
   updateProduct: (type: string, id: any, deleteFromCart: any) => void
 }
 
 export const useProductsStore = create<IProductsStore>((set, get) => ({
   lovely: [],
   cart: [],
+  clear: () => {
+    set({cart: []})
+  },
   setLovely: (products: IProduct[]) => set({lovely: products}),
   addToCart: (product: ICartItem) => {
     const {cart} = get();

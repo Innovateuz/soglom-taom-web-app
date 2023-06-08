@@ -1,32 +1,33 @@
-import {Container} from "../../components/Container";
-import {HiOutlineHeart, HiHeart} from "react-icons/hi";
-import {IoIosArrowBack} from "react-icons/io";
-import {products} from "../../mocks/products";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
-import {Button} from "../../components/Button";
-import {isLiked, saveToLocal, setInit} from "../../utils/lovely";
-import {useProductsStore} from "../../store/products";
-import {AddRemoveBtn} from "../../components/AddRemoveBtn";
-import {useEffect, useState} from "react";
-import {ICartItem, IProduct} from "../../types/interfaces";
+import { Container } from "../../components/Container";
+import { HiOutlineHeart, HiHeart } from "react-icons/hi";
+import { IoIosArrowBack } from "react-icons/io";
+import { products } from "../../mocks/products";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Button } from "../../components/Button";
+import { isLiked, saveToLocal, setInit } from "../../utils/lovely";
+import { useProductsStore } from "../../store/products";
+import { AddRemoveBtn } from "../../components/AddRemoveBtn";
+import { useEffect, useState } from "react";
+import { ICartItem, IProduct } from "../../types/interfaces";
 
 export const ProductDetails = () => {
-  let {pathname} = useLocation();
-  let {id} = useParams();
+  let { pathname } = useLocation();
+  let { id } = useParams();
   const navigate = useNavigate();
-  const {setLovely, lovely, addToCart, cart, updateProduct, deleteFromCart} = useProductsStore();
-  const [product, setProduct] = useState<IProduct>()
-  const [isAdded, setIsAdded] = useState<boolean>(false)
-  const [quantity, setQuantity] = useState<number>(0)
+  const { setLovely, lovely, addToCart, cart, updateProduct, deleteFromCart } =
+    useProductsStore();
+  const [product, setProduct] = useState<IProduct>();
+  const [isAdded, setIsAdded] = useState<boolean>(false);
+  const [quantity, setQuantity] = useState<number>(0);
 
   useEffect(() => {
     for (let i = 0; i < products?.length; i++) {
       // @ts-ignore
       if (products[i].id == id) {
-        setProduct(products[i])
+        setProduct(products[i]);
       }
     }
-  }, [id])
+  }, [id]);
 
   const click = () => {
     saveToLocal(product, setLovely);
@@ -35,26 +36,26 @@ export const ProductDetails = () => {
   const onProductAddHandler = (): void => {
     let newProduct: any = {
       ...product,
-      quantity: 1
-    }
-    addToCart(newProduct)
-  }
+      quantity: 1,
+    };
+    addToCart(newProduct);
+  };
 
   const checkIsAddedToCart = () => {
     for (let i = 0; i < cart.length; i++) {
       // @ts-ignore
       if (cart[i].id == id) {
-        setIsAdded(true)
-        setQuantity(cart[i].quantity)
+        setIsAdded(true);
+        setQuantity(cart[i].quantity);
       }
     }
-  }
+  };
 
   useEffect(() => {
-    checkIsAddedToCart()
-  }, [cart])
+    checkIsAddedToCart();
+  }, [cart]);
 
-  console.log(cart)
+  console.log(cart);
 
   return (
     <Container className="pt-[20px]">
@@ -66,8 +67,7 @@ export const ProductDetails = () => {
             alt="Menu"
           />
         </div>
-        <div
-          className="overflow-hidden px-2 flex flex-col  w-full text-center justify-center  items-center pb-3 mt-[20px] pt-[30px] rounded-3xl">
+        <div className="overflow-hidden px-2 flex flex-col  w-full text-center justify-center  items-center pb-3 mt-[20px] pt-[30px] rounded-3xl">
           {isLiked(id, lovely) ? (
             <div className="mb-3">
               <HiHeart
@@ -96,26 +96,41 @@ export const ProductDetails = () => {
             accusamus in nobis quasi necessitatibus aspernatur aliquam? Rem
           </p>
         </div>
-        {!isAdded && <Button
-            onClick={() => onProductAddHandler()}
-            className="bg-[#FA4A0C] text-white"
-            name="Savatchaga qo'shish"
-        ></Button>}
-        {isAdded && (
-          <div className='flex items-center gap-3'>
+        <div>
+          {!isAdded && (
             <Button
-              onClick={() => updateProduct('minus', id || '', deleteFromCart)}
+              onClick={() => onProductAddHandler()}
               className="bg-[#FA4A0C] text-white"
-              name="-"
+              name="Savatchaga qo'shish"
             ></Button>
-            <p>{quantity}</p>
-            <Button
-              onClick={() => updateProduct('plus', id || '', deleteFromCart)}
-              className="bg-[#FA4A0C] text-white"
-              name="+"
-            ></Button>
-          </div>
-        )}
+          )}
+          {isAdded && (
+            <div className="flex gap-5">
+              <Button
+                onClick={() => navigate("/cart")}
+                className="bg-[#FA4A0C] text-white"
+                name="Savatchaga o'tish"
+              ></Button>
+              <div className="flex items-center gap-3">
+                <Button
+                  onClick={() =>
+                    updateProduct("minus", id || "", deleteFromCart)
+                  }
+                  className="bg-[#FA4A0C] text-white"
+                  name="-"
+                ></Button>
+                <p>{quantity}</p>
+                <Button
+                  onClick={() =>
+                    updateProduct("plus", id || "", deleteFromCart)
+                  }
+                  className="bg-[#FA4A0C] text-white"
+                  name="+"
+                ></Button>
+              </div>
+            </div>
+          )}
+        </div>
         {/*<AddRemoveBtn product={product}></AddRemoveBtn>*/}
       </div>
     </Container>
