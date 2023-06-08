@@ -1,37 +1,60 @@
-import { Container } from "../../components/Container";
-import { HiOutlineHeart, HiHeart } from "react-icons/hi";
-import { IoIosArrowBack } from "react-icons/io";
-import { products } from "../../mocks/products";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { Button } from "../../components/Button";
-import { isLiked, saveToLocal, setInit } from "../../utils/lovely";
-import { useProductsStore } from "../../store/products";
-import { AddRemoveBtn } from "../../components/AddRemoveBtn";
+import {Container} from "../../components/Container";
+import {HiOutlineHeart, HiHeart} from "react-icons/hi";
+import {IoIosArrowBack} from "react-icons/io";
+import {products} from "../../mocks/products";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {Button} from "../../components/Button";
+import {isLiked, saveToLocal, setInit} from "../../utils/lovely";
+import {useProductsStore} from "../../store/products";
+import {AddRemoveBtn} from "../../components/AddRemoveBtn";
+import {useEffect, useState} from "react";
+import {ICartItem, IProduct} from "../../types/interfaces";
 
 export const ProductDetails = () => {
-  let { pathname } = useLocation();
-  let { Id } = useParams();
-  let id = Number(Id);
+  let {pathname} = useLocation();
+  let {id} = useParams();
   const navigate = useNavigate();
-  const product = products[id - 1];
-  const { setLovely, lovely } = useProductsStore();
-  const name = product.name;
-  const currency = product.currency;
-  const image = product.image;
-  const price = product.price;
+  const {setLovely, lovely, addToCart, cart, updateProduct, deleteFromCart} = useProductsStore();
+  const [product, setProduct] = useState<IProduct>()
+  const [isAdded, setIsAdded] = useState<boolean>(false)
+  const [quantity, setQuantity] = useState<number>(0)
+
+  useEffect(() => {
+    for (let i = 0; i < products?.length; i++) {
+      // @ts-ignore
+      if (products[i].id == id) {
+        setProduct(products[i])
+      }
+    }
+  }, [id])
 
   const click = () => {
-    let product = { id, name, currency, image, price };
     saveToLocal(product, setLovely);
   };
 
-  const product1 = {
-    name: name,
-    id: id,
-    currency: currency,
-    image: image,
-    price: price,
-  };
+  const onProductAddHandler = (): void => {
+    let newProduct: any = {
+      ...product,
+      quantity: 1
+    }
+    addToCart(newProduct)
+  }
+
+  const checkIsAddedToCart = () => {
+    for (let i = 0; i < cart.length; i++) {
+      // @ts-ignore
+      if (cart[i].id == id) {
+        setIsAdded(true)
+        setQuantity(cart[i].quantity)
+      }
+    }
+  }
+
+  useEffect(() => {
+    checkIsAddedToCart()
+  }, [cart])
+
+  console.log(cart)
 
   return (
     <Container className="pt-[20px]">
@@ -39,11 +62,12 @@ export const ProductDetails = () => {
         <div>
           <img
             className="object-cover  shadow-2xl w-[220px] h-[220px] rounded-full"
-            src={product.image}
+            src={product?.image}
             alt="Menu"
           />
         </div>
-        <div className="overflow-hidden px-2 flex flex-col  w-full text-center justify-center  items-center pb-3 mt-[20px] pt-[30px] rounded-3xl">
+        <div
+          className="overflow-hidden px-2 flex flex-col  w-full text-center justify-center  items-center pb-3 mt-[20px] pt-[30px] rounded-3xl">
           {isLiked(id, lovely) ? (
             <div className="mb-3">
               <HiHeart
@@ -60,10 +84,10 @@ export const ProductDetails = () => {
             </div>
           )}
           <p className="whitespace-nowrap truncate overflow-hidden overflow-ellipsis font-bold text-3xl">
-            {product.name}
+            {product?.name}
           </p>
           <p className="whitespace-nowrap truncate overflow-hidden font-medium text-primary text-2xl mt-1">
-            {product.price} {product.currency}
+            {product?.price} {product?.currency}
           </p>
           <p className="opacity-[0.8] text-start mt-2 pl-4 leading-7">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse,
@@ -72,11 +96,27 @@ export const ProductDetails = () => {
             accusamus in nobis quasi necessitatibus aspernatur aliquam? Rem
           </p>
         </div>
-        <Button
-          className="bg-[#FA4A0C] text-white"
-          name="Savatchaga qo'shish"
-        ></Button>
-        <AddRemoveBtn></AddRemoveBtn>
+        {!isAdded && <Button
+            onClick={() => onProductAddHandler()}
+            className="bg-[#FA4A0C] text-white"
+            name="Savatchaga qo'shish"
+        ></Button>}
+        {isAdded && (
+          <div className='flex items-center gap-3'>
+            <Button
+              onClick={() => updateProduct('minus', id || '', deleteFromCart)}
+              className="bg-[#FA4A0C] text-white"
+              name="-"
+            ></Button>
+            <p>{quantity}</p>
+            <Button
+              onClick={() => updateProduct('plus', id || '', deleteFromCart)}
+              className="bg-[#FA4A0C] text-white"
+              name="+"
+            ></Button>
+          </div>
+        )}
+        {/*<AddRemoveBtn product={product}></AddRemoveBtn>*/}
       </div>
     </Container>
   );

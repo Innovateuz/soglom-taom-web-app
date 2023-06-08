@@ -1,8 +1,8 @@
-import { HiHeart, HiOutlineHeart } from "react-icons/hi";
-import { saveToLocal } from "../utils/lovely";
-import { useEffect, useState } from "react";
-import { useProductsStore } from "../store/products";
-import { useNavigate } from "react-router-dom";
+import {HiHeart, HiOutlineHeart} from "react-icons/hi";
+import {saveToLocal} from "../utils/lovely";
+import {useEffect, useState} from "react";
+import {useProductsStore} from "../store/products";
+import {useNavigate} from "react-router-dom";
 
 interface IProps {
   id: number;
@@ -14,18 +14,18 @@ interface IProps {
 }
 
 export const ProductItem = ({
-  id,
-  name,
-  currency,
-  image,
-  price,
-  path,
-}: IProps) => {
+                              id,
+                              name,
+                              currency,
+                              image,
+                              price,
+                              path,
+                            }: IProps) => {
   const [isLikedProduct, setIsLikedProduct] = useState(false);
-  const { setLovely, lovely } = useProductsStore();
+  const {setLovely, lovely} = useProductsStore();
   const navigate = useNavigate();
   const click = () => {
-    let product = { id, name, currency, image, price };
+    let product = {id, name, currency, image, price};
     saveToLocal(product, setLovely);
   };
 
@@ -33,11 +33,7 @@ export const ProductItem = ({
     setIsLikedProduct(lovely.some((el: any) => el.id === id));
   }, [id, lovely]);
 
-  const navigatePage = () => {
-    if (path === "/main") {
-      navigate(`${id}`);
-    }
-  };
+  const navigatePage = () => navigate(`/products/${id}`);
 
   return (
     <div className="relative w-[152px] flex flex-col justify-center items-center gap-3">
@@ -51,7 +47,8 @@ export const ProductItem = ({
           alt="product"
         />
       </div>
-      <div className="px-2 overflow-hidden z-[10] shadow-2xl w-full text-center items-center pt-[80px] mt-[58px] pb-3 rounded-3xl">
+      <div
+        className="px-2 overflow-hidden z-[10] shadow-2xl w-full text-center items-center pt-[80px] mt-[58px] pb-3 rounded-3xl">
         <div className="cursor-pointer" onClick={() => navigatePage()}>
           <p className="whitespace-nowrap truncate overflow-hidden overflow-ellipsis text-2xl">
             {name}
