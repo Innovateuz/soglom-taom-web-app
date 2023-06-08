@@ -1,50 +1,123 @@
-import {HiHeart, HiOutlineHeart} from "react-icons/hi";
-import {saveToLocal} from "../utils/lovely";
+import {Container} from "../../components/Container";
+import {HiOutlineHeart, HiHeart} from "react-icons/hi";
+import {IoIosArrowBack} from "react-icons/io";
+import {products} from "../../mocks/products";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {Button} from "../../components/Button";
+import {isLiked, saveToLocal, setInit} from "../../utils/lovely";
+import {useProductsStore} from "../../store/products";
+import {AddRemoveBtn} from "../../components/AddRemoveBtn";
 import {useEffect, useState} from "react";
-import {useProductsStore} from "../store/products";
+import {ICartItem, IProduct} from "../../types/interfaces";
 
-interface IProps {
-  id: number,
-  name: string,
-  price: number,
-  currency: string,
-  image: string
-}
+export const ProductDetails = () => {
+  let {pathname} = useLocation();
+  let {id} = useParams();
+  const navigate = useNavigate();
+  const {setLovely, lovely, addToCart, cart, updateProduct, deleteFromCart} = useProductsStore();
+  const [product, setProduct] = useState<IProduct>()
+  const [isAdded, setIsAdded] = useState<boolean>(false)
+  const [quantity, setQuantity] = useState<number>(0)
 
-export const ProductItem = ({id, name, currency, image, price}: IProps) => {
-  const [isLikedProduct, setIsLikedProduct] = useState(false)
-  const {setLovely, lovely} = useProductsStore()
+  useEffect(() => {
+    for (let i = 0; i < products?.length; i++) {
+      // @ts-ignore
+      if (products[i].id == id) {
+        setProduct(products[i])
+      }
+    }
+  }, [id])
+
   const click = () => {
-    let product = {id, name, currency, image, price}
-    saveToLocal(product, setLovely)
+    saveToLocal(product, setLovely);
+  };
+
+  const onProductAddHandler = (): void => {
+    let newProduct: any = {
+      ...product,
+      quantity: 1
+    }
+    addToCart(newProduct)
+  }
+
+  const checkIsAddedToCart = () => {
+    for (let i = 0; i < cart.length; i++) {
+      // @ts-ignore
+      if (cart[i].id == id) {
+        setIsAdded(true)
+        setQuantity(cart[i].quantity)
+      }
+    }
   }
 
   useEffect(() => {
-    setIsLikedProduct(lovely?.some((el: any) => el.id === id))
-  }, [id, lovely])
+    checkIsAddedToCart()
+  }, [cart])
+
+  console.log(cart)
 
   return (
-    <div className='relative w-[152px] flex flex-col justify-center items-center gap-3'>
-      <div className='absolute top-0 z-[11]'>
-        <img className='object-cover products-img shadow-xl w-[128px] h-[128px] rounded-full' src={image}
-             alt="product"/>
-      </div>
-      <div
-        className='px-2 overflow-hidden z-[10] shadow-2xl w-full text-center items-center pt-[80px] mt-[58px] pb-3 rounded-3xl'>
-        <p className='whitespace-nowrap truncate overflow-hidden overflow-ellipsis text-2xl'>{name}</p>
-        <p
-          className='whitespace-nowrap truncate overflow-hidden overflow-ellipsis font-medium text-primary mt-1'>{price} {currency}</p>
-        <div className='flex justify-center items-center mt-2'>
-          {isLikedProduct ? (
-            <HiHeart onClick={() => click()}
-                     className={`text-primary cursor-pointer w-[20px] h-[20px]`}/>
-          ) : (
-            <HiOutlineHeart onClick={() => click()}
-                            className={`text-primary cursor-pointer w-[20px] h-[20px]`}/>
-          )}
+    <Container className="pt-[20px]">
+      <div className="flex flex-col justify-center items-center gap-3 pt-2">
+        <div>
+          <img
+            className="object-cover  shadow-2xl w-[220px] h-[220px] rounded-full"
+            src={product?.image}
+            alt="Menu"
+          />
         </div>
-
+        <div
+          className="overflow-hidden px-2 flex flex-col  w-full text-center justify-center  items-center pb-3 mt-[20px] pt-[30px] rounded-3xl">
+          {isLiked(id, lovely) ? (
+            <div className="mb-3">
+              <HiHeart
+                onClick={() => click()}
+                className="w-[30px] h-[30px] text-[#FA4A0C] cursor-pointer"
+              />
+            </div>
+          ) : (
+            <div className="mb-3">
+              <HiOutlineHeart
+                onClick={() => click()}
+                className="w-[30px] h-[30px] cursor-pointer"
+              />
+            </div>
+          )}
+          <p className="whitespace-nowrap truncate overflow-hidden overflow-ellipsis font-bold text-3xl">
+            {product?.name}
+          </p>
+          <p className="whitespace-nowrap truncate overflow-hidden font-medium text-primary text-2xl mt-1">
+            {product?.price} {product?.currency}
+          </p>
+          <p className="opacity-[0.8] text-start mt-2 pl-4 leading-7">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse,
+            laudantium nulla! Tempore, magnam qui sint neque mollitia a odio
+            laborum incidunt maiores vitae similique quod distinctio, unde dolor
+            accusamus in nobis quasi necessitatibus aspernatur aliquam? Rem
+          </p>
+        </div>
+        {!isAdded && <Button
+            onClick={() => onProductAddHandler()}
+            className="bg-[#FA4A0C] text-white"
+            name="Savatchaga qo'shish"
+        ></Button>}
+        {isAdded && (
+          <div className='flex items-center gap-3'>
+            <Button
+              onClick={() => updateProduct('minus', id || '', deleteFromCart)}
+              className="bg-[#FA4A0C] text-white"
+              name="-"
+            ></Button>
+            <p>{quantity}</p>
+            <Button
+              onClick={() => updateProduct('plus', id || '', deleteFromCart)}
+              className="bg-[#FA4A0C] text-white"
+              name="+"
+            ></Button>
+          </div>
+        )}
+        {/*<AddRemoveBtn product={product}></AddRemoveBtn>*/}
       </div>
-    </div>
-  )
-}
+    </Container>
+  );
+};
