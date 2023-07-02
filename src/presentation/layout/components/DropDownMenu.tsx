@@ -3,7 +3,8 @@ import { account, links } from "../../../mocks/account";
 import { MenuItem } from "../../../components/MenuItem";
 import { Button } from "../../../components/Button";
 import { HiPhoneOutgoing } from "react-icons/hi";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   isOpen: boolean;
@@ -13,6 +14,8 @@ export const DropDownMenu = ({ isOpen }: IProps) => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [isOpen]);
+
+  const { t } = useTranslation();
 
   return (
     <div
@@ -34,7 +37,7 @@ export const DropDownMenu = ({ isOpen }: IProps) => {
         </div>
         <div className="w-full flex justify-center items-center mt-10">
           <Button
-            name="Call To Admin"
+            name={t("SideBar.call")}
             className="bg-white shadow max-w-[240px]"
             icon={<HiPhoneOutgoing />}
           />

@@ -17,7 +17,7 @@ export const saveToLocal = async (product: any, setLovely: any) => {
 
 export const isLiked = (id: any, data: any) => {
   // @ts-ignore
-  return data.some((el: any) => el.id === id);
+  return data.some((el: any) => id == el.id);
 };
 
 export const setInit = (setLiked: any) => {

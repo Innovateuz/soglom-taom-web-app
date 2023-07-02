@@ -9,10 +9,12 @@ import { useProductsStore } from "../../store/products";
 import { AddRemoveBtn } from "../../components/AddRemoveBtn";
 import { useEffect, useState } from "react";
 import { ICartItem, IProduct } from "../../types/interfaces";
+import { useTranslation } from "react-i18next";
 
 export const ProductDetails = () => {
   let { pathname } = useLocation();
   let { id } = useParams();
+
   const navigate = useNavigate();
   const { setLovely, lovely, addToCart, cart, updateProduct, deleteFromCart } =
     useProductsStore();
@@ -55,7 +57,7 @@ export const ProductDetails = () => {
     checkIsAddedToCart();
   }, [cart]);
 
-  console.log(cart);
+  const { t } = useTranslation();
 
   return (
     <Container className="pt-[20px]">
@@ -72,7 +74,7 @@ export const ProductDetails = () => {
             <div className="mb-3">
               <HiHeart
                 onClick={() => click()}
-                className="w-[30px] h-[30px] text-[#FA4A0C] cursor-pointer"
+                className="w-[30px] h-[30px] text-primary cursor-pointer"
               />
             </div>
           ) : (
@@ -90,10 +92,10 @@ export const ProductDetails = () => {
             {product?.price} {product?.currency}
           </p>
           <p className="opacity-[0.8] text-start mt-2 pl-4 leading-7">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse,
-            laudantium nulla! Tempore, magnam qui sint neque mollitia a odio
-            laborum incidunt maiores vitae similique quod distinctio, unde dolor
-            accusamus in nobis quasi necessitatibus aspernatur aliquam? Rem
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus
+            blanditiis facere, placeat assumenda laborum aspernatur, veniam unde
+            aperiam nihil sed porro corrupti ea numquam voluptate enim! Fugiat
+            quam quaerat accusantium.
           </p>
         </div>
         <div>
@@ -101,7 +103,7 @@ export const ProductDetails = () => {
             <Button
               onClick={() => onProductAddHandler()}
               className="bg-[#FA4A0C] text-white"
-              name="Savatchaga qo'shish"
+              name={t("Details.Button1")}
             ></Button>
           )}
           {isAdded && (
@@ -109,7 +111,7 @@ export const ProductDetails = () => {
               <Button
                 onClick={() => navigate("/cart")}
                 className="bg-[#FA4A0C] text-white"
-                name="Savatchaga o'tish"
+                name={t("Details.Button2")}
               ></Button>
               <div className="flex items-center gap-3">
                 <Button

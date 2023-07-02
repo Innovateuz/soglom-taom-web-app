@@ -7,7 +7,9 @@ import { Cart } from "../presentation/cart/Cart";
 import { ProductDetails } from "../presentation/details/ProductDetails";
 import { UpdateAccaunt } from "../presentation/profile/components/UodateAccaunt";
 import { Order } from "../presentation/order";
-
+import { LangPage } from "../presentation/layout/components/LangPage";
+import { FAQs } from "../presentation/layout/components/FAQs";
+import { Location } from "../presentation/location/Location";
 export const Routers = () => {
   return (
     <Routes>
@@ -28,6 +30,9 @@ export const Routers = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/products/:id" element={<ProductDetails />} />
       </Route>
+      <Route path="/language" element={<LangPage />}></Route>
+      <Route path="/faq" element={<FAQs />}></Route>
+      <Route path="/location" element={<Location />}></Route>
     </Routes>
   );
 };
