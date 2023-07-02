@@ -1,0 +1,15 @@
+{
+  "SideBar": {
+    "location": "Joylashuv",
+    "language": "Til",
+    "langTitle": "Tilni tanlash",
+    "call": "Admin bilan bog'lanish"
+  },
+  "Details": {
+    "Button1": "Savatchaga qo'shish",
+    "Button2": "Savatchaga o'tish"
+  },
+  "Cart": {
+    "Buy": "Buyurtma berish"
+  }
+}
